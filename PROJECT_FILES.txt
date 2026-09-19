@@ -1,0 +1,29 @@
+BLOODCONNECT COMPLETE PROJECT FILE LIST
+
+.env	593 bytes
+.env.example	440 bytes
+.gitignore	41 bytes
+README.md	2558 bytes
+START_BLOODCONNECT.bat	1260 bytes
+client/index.html	603 bytes
+client/package.json	533 bytes
+client/postcss.config.js	79 bytes
+client/src/App.jsx	15767 bytes
+client/src/api.js	307 bytes
+client/src/index.css	1454 bytes
+client/src/main.jsx	328 bytes
+client/tailwind.config.js	353 bytes
+client/vite.config.js	161 bytes
+package.json	526 bytes
+server/middleware/auth.js	647 bytes
+server/models/BloodRequest.js	739 bytes
+server/models/Donation.js	552 bytes
+server/models/Donor.js	484 bytes
+server/models/Notification.js	352 bytes
+server/models/User.js	529 bytes
+server/package.json	391 bytes
+server/routes/admin.js	706 bytes
+server/routes/auth.js	2484 bytes
+server/routes/donors.js	1276 bytes
+server/routes/requests.js	2282 bytes
+server/server.js	1621 bytes
