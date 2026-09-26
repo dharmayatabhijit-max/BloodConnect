@@ -1,7 +1,11 @@
 import axios from "axios";
 
+const defaultBaseUrl = import.meta.env.DEV
+  ? "/api"
+  : "https://bloodconnect-1-wy0v.onrender.com/api";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api"
+  baseURL: import.meta.env.VITE_API_URL || defaultBaseUrl
 });
 
 api.interceptors.request.use((config) => {

@@ -85,8 +85,16 @@ Backend health check:
 `http://localhost:5000/api/health`
 
 The local frontend proxies `/api` to `http://localhost:5000`. For a deployed
-frontend, set `VITE_API_URL` to the deployed API base URL (for example,
-`https://your-api.example.com/api`) in the frontend build environment.
+frontend, configure the Render services this way:
+
+- API web service: root directory `server`, build command `npm install`, start command `npm start`.
+- Frontend static site: root directory `client`, build command `npm install && npm run build`, publish directory `dist`.
+- Frontend environment variable: `VITE_API_URL=https://bloodconnect-1-wy0v.onrender.com/api`.
+- API environment variable: `CLIENT_URL` set to the exact frontend Render URL. Multiple origins can be comma-separated.
+
+Set `MONGODB_URI` and `JWT_SECRET` on the API service as well. After changing
+frontend environment variables, trigger a new frontend deploy because Vite
+embeds `VITE_API_URL` at build time.
 
 ## Main features
 - Home page
