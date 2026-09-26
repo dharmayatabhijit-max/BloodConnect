@@ -1,5 +1,7 @@
 # BloodConnect — Complete Full-Stack Project
 
+**Live demo:** [Open BloodConnect](https://bloodconnect-frontend-np8a.onrender.com)
+
 BloodConnect is a college-ready full-stack blood donation platform with React, Vite,
 Tailwind CSS, Node.js, Express, MongoDB Atlas, Mongoose and JWT authentication.
 
@@ -90,7 +92,7 @@ frontend, configure the Render services this way:
 - API web service: root directory `server`, build command `npm install`, start command `npm start`.
 - Frontend static site: root directory `client`, build command `npm install && npm run build`, publish directory `dist`.
 - Frontend environment variable: `VITE_API_URL=https://bloodconnect-1-wy0v.onrender.com/api`.
-- API environment variable: `CLIENT_URL` set to the exact frontend Render URL. Multiple origins can be comma-separated.
+- API environment variable: `CLIENT_URL=https://bloodconnect-frontend-np8a.onrender.com`. Multiple origins can be comma-separated.
 
 Set `MONGODB_URI` and `JWT_SECRET` on the API service as well. After changing
 frontend environment variables, trigger a new frontend deploy because Vite
