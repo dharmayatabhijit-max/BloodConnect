@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://bloodconnect-1-wy0v.onrender.com/api"
+  baseURL: import.meta.env.VITE_API_URL || "/api"
 });
 
 api.interceptors.request.use((config) => {
@@ -9,5 +9,13 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+export function getApiErrorMessage(error, fallback) {
+  if (error.response?.data?.message) return error.response.data.message;
+  if (error.code === "ERR_NETWORK") {
+    return "Cannot reach the BloodConnect API. Check that the server is running and the API URL is configured.";
+  }
+  return fallback;
+}
 
 export default api;

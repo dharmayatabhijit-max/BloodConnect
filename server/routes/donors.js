@@ -7,12 +7,18 @@ import { compatibleDonorGroups } from "../utils/bloodCompatibility.js";
 
 const router = express.Router();
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 router.get("/search", async (req, res) => {
   try {
     const { bloodGroup, city } = req.query;
     const filter = { available: true, consentToContact: true };
     if (bloodGroup) filter.bloodGroup = { $in: compatibleDonorGroups(bloodGroup) };
-    if (city) filter.city = new RegExp(`^${city}$`, "i");
+    if (typeof city === "string" && city.trim()) {
+      filter.city = new RegExp(`^${escapeRegex(city.trim())}$`, "i");
+    }
 
     const donors = await Donor.find(filter)
       .populate("userId", "name city phone email")

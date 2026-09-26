@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { Activity, Heart, LogIn, LogOut, Search, ShieldCheck, UserPlus } from "lucide-react";
-import api from "./api";
+import api, { getApiErrorMessage } from "./api";
 
 const groups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -108,7 +108,7 @@ function Login({ setUser }) {
       localStorage.setItem("bloodconnect_token", data.token);
       localStorage.setItem("bloodconnect_user", JSON.stringify(data.user));
       setUser(data.user); nav("/");
-    } catch (e) { setError(e.response?.data?.message || "Login failed"); }
+    } catch (e) { setError(getApiErrorMessage(e, "Login failed")); }
   }
   return <Page title="Welcome back" subtitle="Login to your BloodConnect account."><Card><form onSubmit={submit} className="space-y-4">
     <Field label="Email" type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} required />
@@ -130,7 +130,7 @@ function Register({ setUser }) {
       localStorage.setItem("bloodconnect_token",data.token);
       localStorage.setItem("bloodconnect_user",JSON.stringify(data.user));
       setUser(data.user); nav("/");
-    } catch(e){setError(e.response?.data?.message||"Registration failed");}
+    } catch(e){setError(getApiErrorMessage(e, "Registration failed"));}
   }
   return <Page title="Create your account" subtitle="Join the blood donation community."><Card><form onSubmit={submit} className="grid gap-4 md:grid-cols-2">
     <Field label="Full name" value={form.name} onChange={e=>update("name",e.target.value)} required />
@@ -150,15 +150,17 @@ function Register({ setUser }) {
 }
 
 function FindBlood() {
-  const [bloodGroup,setBloodGroup]=useState("O+"); const [city,setCity]=useState(""); const [donors,setDonors]=useState([]); const [loading,setLoading]=useState(false);
-  async function search(e){e?.preventDefault();setLoading(true);try{const {data}=await api.get(`/donors/search?bloodGroup=${encodeURIComponent(bloodGroup)}&city=${encodeURIComponent(city)}`);setDonors(data);}finally{setLoading(false);}}
+  const [bloodGroup,setBloodGroup]=useState("O+"); const [city,setCity]=useState(""); const [donors,setDonors]=useState([]); const [loading,setLoading]=useState(false); const [error,setError]=useState(""); const [searched,setSearched]=useState(false);
+  async function search(e){e?.preventDefault();setLoading(true);setError("");try{const {data}=await api.get("/donors/search",{params:{bloodGroup,city}});setDonors(data);setSearched(true);}catch(e){setDonors([]);setError(getApiErrorMessage(e,"Could not search donors"));}finally{setLoading(false);}}
   return <Page title="Find Blood" subtitle="Search donors who have chosen to be available for contact."><Card><form onSubmit={search} className="grid gap-4 md:grid-cols-3">
     <label><span className="mb-1 block text-sm font-semibold">Blood group</span><select className="w-full rounded-xl border p-3" value={bloodGroup} onChange={e=>setBloodGroup(e.target.value)}>{groups.map(g=><option key={g}>{g}</option>)}</select></label>
     <Field label="City" placeholder="e.g. Bengaluru" value={city} onChange={e=>setCity(e.target.value)} required />
-    <button className="mt-6 rounded-xl bg-rose-600 py-3 font-bold text-white">{loading?"Searching...":"Search Donors"}</button>
+    <button disabled={loading} className="mt-6 rounded-xl bg-rose-600 py-3 font-bold text-white disabled:opacity-60">{loading?"Searching...":"Search Donors"}</button>
   </form></Card>
   <div className="mt-6 grid gap-4 md:grid-cols-2">{donors.map(d=><Card key={d._id}><div className="flex items-center justify-between"><div><h3 className="text-xl font-bold">{d.userId?.name || "Donor"}</h3><p className="text-slate-500">{d.city} {d.area ? `• ${d.area}` : ""}</p></div><div className="rounded-2xl bg-rose-50 px-4 py-3 text-xl font-black text-rose-600">{d.bloodGroup}</div></div><p className="mt-4 text-sm text-emerald-600">● Available for contact</p><p className="mt-2 text-sm font-semibold">Phone: {d.userId?.phone || "Not provided"}</p><p className="text-sm">Email: {d.userId?.email || "Not provided"}</p></Card>)}</div>
-  {donors.length===0 && <p className="mt-8 text-center text-slate-500">Search to see matching donors.</p>}</Page>;
+  {error && <p role="alert" className="mt-6 rounded-xl bg-red-50 p-3 text-center text-red-700">{error}</p>}
+  {!error && searched && donors.length===0 && <p className="mt-8 text-center text-slate-500">No available donors matched that blood group and city.</p>}
+  {!error && !searched && donors.length===0 && <p className="mt-8 text-center text-slate-500">Search to see matching donors.</p>}</Page>;
 }
 
 function Requests(){

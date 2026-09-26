@@ -84,6 +84,10 @@ Backend health check:
 
 `http://localhost:5000/api/health`
 
+The local frontend proxies `/api` to `http://localhost:5000`. For a deployed
+frontend, set `VITE_API_URL` to the deployed API base URL (for example,
+`https://your-api.example.com/api`) in the frontend build environment.
+
 ## Main features
 - Home page
 - Find Blood
