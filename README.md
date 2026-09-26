@@ -5,6 +5,31 @@
 BloodConnect is a college-ready full-stack blood donation platform with React, Vite,
 Tailwind CSS, Node.js, Express, MongoDB Atlas, Mongoose and JWT authentication.
 
+## Project Overview
+
+BloodConnect helps people find compatible blood donors and coordinate blood
+requests. Donors can share their blood group and city, manage availability, and
+choose whether they can be contacted. Registered users can search for donors or
+submit a request; the API matches requests against compatible, available donors
+in the same city and records notifications for matching donors.
+
+## Workflow
+
+```mermaid
+flowchart TD
+	Visitor[Visitor] --> Account[Register or log in]
+	Account --> User[Authenticated user]
+	User --> DonorProfile[Create or manage donor profile]
+	DonorProfile --> Consent[Set availability and contact consent]
+	User --> Search[Search by blood group and city]
+	User --> Request[Submit a blood request]
+	Request --> Match[Match compatible donors in the same city]
+	Consent --> Match
+	Match --> Notify[Record notifications for matching donors]
+	Match --> Status[Update request status]
+	Admin[Administrator] --> Stats[View platform statistics]
+```
+
 ## What is already included?
 
 ### Frontend
@@ -113,6 +138,16 @@ embeds `VITE_API_URL` at build time.
 - Admin statistics API
 - MongoDB Atlas persistence
 - Responsive Tailwind CSS UI
+
+## Future Improvements
+- Add verified donor identity and phone or email verification.
+- Deliver donor notifications by email, SMS, or push notification.
+- Add privacy controls for donor contact details and request visibility.
+- Add automated tests, monitoring, and audit logs for production readiness.
+
+## Developed By
+
+Abhijit Dharmayat
 
 ## Important note
 This is an educational/college project. A real blood-service platform needs
